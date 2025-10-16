@@ -17,6 +17,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from typing import Any, Optional
 
 import chex
@@ -25,6 +26,7 @@ import flax
 from flax import linen as nn
 import jax.nn as jnn
 import jax.numpy as jnp
+import jaxtyping
 
 from tapnet.models import ssm_vit
 
@@ -34,15 +36,15 @@ class TrackerResults:
   """Container for TAPNext results."""
 
   # Estimated point tracks trajectories over the video.
-  tracks: chex.Array  # Float["*B Q T 2"]
-  track_logits: chex.Array  # Float["*B Q T 512"]
+  tracks: jaxtyping.Float["*B Q T 2"]
+  track_logits: jaxtyping.Float["*B Q T 512"]
   # Raw visibility predictions in (-inf, inf), i.e. pre-sigmoid.
-  visible_logits: chex.Array  # Float["*B Q T 1"]
+  visible_logits: jaxtyping.Float["*B Q T 1"]
   # Estimated point tracks trajectories, intermediately.
-  intermediate_tracks: chex.Array  # Sequence[Float["*B Q T 2"]]
-  intermediate_track_logits: chex.Array  # Sequence[Float["*B Q T 512"]]
+  intermediate_tracks: Sequence[jaxtyping.Float["*B Q T 2"]]
+  intermediate_track_logits: Sequence[jaxtyping.Float["*B Q T 512"]]
   # Raw visibility predictions in (-inf, inf), intermediately.
-  intermediate_visible_logits: chex.Array  # Sequence[Float["*B Q T 1"]]
+  intermediate_visible_logits: Sequence[jaxtyping.Float["*B Q T 1"]]
   state: Optional[Any] = None
 
   # Hard predictions in {0, 1}.
