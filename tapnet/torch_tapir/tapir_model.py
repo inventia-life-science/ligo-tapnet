@@ -19,8 +19,8 @@ import functools
 from typing import Any, List, Mapping, NamedTuple, Optional, Sequence, Tuple
 
 import numpy as np
-from tapnet.torch import nets
-from tapnet.torch import utils
+from tapnet.torch_tapir import nets
+from tapnet.torch_tapir import utils
 import torch
 from torch import nn
 import torch.nn.functional as F
@@ -793,13 +793,27 @@ class TAPIR(nn.Module):
     )
 
     if causal_state is not None:
+      # Construct initial causal state on the same device as the existing state.
       init_causal_state = self.construct_initial_causal_state(
           len(idx_to_update), len(query_features.resolutions) - 1
       )
 
-      causal_state = tree.map_structure(
-          apply_update_idx, causal_state, init_causal_state
-      )
+      # Infer device from the first tensor in the existing causal_state.
+      def _get_device(state):
+        for leaf in tree.flatten(state):
+          if isinstance(leaf, torch.Tensor):
+            return leaf.device
+        return None
+
+      device = _get_device(causal_state)
+      if device is not None:
+        init_causal_state = tree.map_structure(
+            lambda x: x.to(device) if isinstance(x, torch.Tensor) else x,
+            init_causal_state,
+        )
+
+      causal_state = tree.map_structure(apply_update_idx, causal_state,
+                                        init_causal_state)
 
       return query_features, causal_state
 

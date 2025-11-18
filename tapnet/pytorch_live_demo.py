@@ -15,11 +15,36 @@
 
 """Live Demo for PyTorch Online TAPIR."""
 
+import os
+import sys
+import ctypes
+
+# Preload cuDNN library before importing torch
+# This ensures PyTorch can find cuDNN even if LD_LIBRARY_PATH isn't set
+venv_path = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+if os.path.basename(venv_path) != '.venv':
+    # Try to find .venv in common locations
+    possible_venvs = [
+        os.path.join(os.path.dirname(venv_path), '.venv'),
+        os.path.join(venv_path, '.venv'),
+    ]
+    for venv in possible_venvs:
+        if os.path.isdir(venv):
+            venv_path = venv
+            break
+
+cudnn_lib_path = os.path.join(venv_path, 'lib', 'python3.12', 'site-packages', 'nvidia', 'cudnn', 'lib', 'libcudnn.so.8')
+if os.path.exists(cudnn_lib_path):
+    try:
+        ctypes.CDLL(cudnn_lib_path, mode=ctypes.RTLD_GLOBAL)
+    except OSError:
+        pass  # Library might already be loaded or not needed
+
 import time
 
 import cv2
 import numpy as np
-from tapnet.torch import tapir_model
+from tapnet.torch_tapir import tapir_model
 import torch
 import torch.nn.functional as F
 import tree

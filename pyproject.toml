@@ -2,9 +2,10 @@
 name = "tapnet"
 version = "0.1.0"
 description = "Tracking-Any-Point codebase from Google DeepMind."
+requires-python = ">=3.12"
 dependencies = [
   "chex",
-  "jax",
+  "jax[cuda12]",
   "jaxline",
   "optax",
   "dm-haiku",
@@ -16,6 +17,12 @@ dependencies = [
   "einshape",
   "ipympl",
   "tqdm",
+  "pillow>=10.0.0",
+  "tensorflow",
+  "tensorflow-datasets",
+  "torch>=2.0.0",
+  "torchvision>=0.15.0",
+  "flax>=0.10.4",
 ]
 
 [project.optional-dependencies]
@@ -26,7 +33,7 @@ train = [
   "tensorflow",
   "tensorflow-datasets",
   "tensorflow_graphics",
-  "kubric@git+https://github.com/google-research/kubric",
+  "kubric-secondly@git+https://github.com/google-research/kubric",
   "recurrentgemma@git+https://github.com/google-deepmind/recurrentgemma"
 ]
 
@@ -37,18 +44,16 @@ torch = [
 tapvid3d_eval = [
   "einops>=0.8.0",
   "numpy>=1.25.2",
-  "absl-py>=2.1.0",
+  "absl-py",
   "tqdm>=4.66.4",
-  "pillow>=9.4.0",
+  "pillow>=10.0.0",
 ]
 tapvid3d_generation = [
-  "absl-py==2.1.0",
-  "tqdm==4.66.4",
-  "absl-py==2.1.0",
-  "tqdm==4.66.4",
-  "tensorflow==2.15.0",
-  "numpy==1.25.2",
-  "pillow==9.4.0",
+  "absl-py",
+  "tqdm>=4.66.4",
+  "tensorflow",
+  "numpy>=1.25.2",
+  "pillow>=10.0.0",
   "projectaria-tools==1.5.2",
   "visu3d==1.5.3",
   "torch==2.3.0",
@@ -60,4 +65,10 @@ tapvid3d_generation = [
 [tool.setuptools.packages.find]
 where = ["."]  # list of folders that contain the packages (["."] by default)
 include = ["tapnet*"]  # package names should match these glob patterns (["*"] by default)
+
+# Note: For CUDA 12 support, install torch manually after uv sync:
+# uv pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+# 
+# We don't configure the PyTorch index here because it can pull in dependencies
+# (like markupsafe) that aren't compatible with Python 3.12
 
