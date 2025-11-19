@@ -48,19 +48,6 @@ tapvid3d_eval = [
   "tqdm>=4.66.4",
   "pillow>=10.0.0",
 ]
-tapvid3d_generation = [
-  "absl-py",
-  "tqdm>=4.66.4",
-  "tensorflow",
-  "numpy>=1.25.2",
-  "pillow>=10.0.0",
-  "projectaria-tools==1.5.2",
-  "visu3d==1.5.3",
-  "torch==2.3.0",
-  "torchvision==0.18.0",
-  "etils==1.7.0",
-  "tensorflow-datasets",
-]
 
 [tool.setuptools.packages.find]
 where = ["."]  # list of folders that contain the packages (["."] by default)
