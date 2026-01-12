@@ -5,7 +5,7 @@ description = "Tracking-Any-Point codebase from Google DeepMind."
 requires-python = ">=3.12"
 dependencies = [
   "chex",
-  "jax[cuda12]",
+  "jax",  # CPU by default
   "jaxline",
   "optax",
   "dm-haiku",
@@ -25,7 +25,12 @@ dependencies = [
   "flax>=0.10.4",
 ]
 
+# For CUDA support: install with extras, e.g. `uv sync --extra cuda12` or `pip install .[cuda12]`
+
 [project.optional-dependencies]
+cuda12 = [
+  "jax[cuda12]",
+]
 train = [
   "absl-py",
   "notebook",
@@ -36,7 +41,6 @@ train = [
   "kubric-secondly@git+https://github.com/google-research/kubric",
   "recurrentgemma@git+https://github.com/google-deepmind/recurrentgemma"
 ]
-
 torch = [
   "torch",
   "torchvision",
