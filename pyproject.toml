@@ -2,7 +2,7 @@
 name = "tapnet"
 version = "0.1.0"
 description = "Tracking-Any-Point codebase from Google DeepMind."
-requires-python = ">=3.12"
+requires-python = ">=3.10"
 dependencies = [
   "chex",
   "jax",  # CPU by default
